@@ -1,0 +1,23 @@
+name: 24/7 Keep Alive for Xiaozhi MCP Tutor on Render
+
+on:
+  schedule:
+    # Tự động ping mỗi 10 phút qua hạ tầng Cloud của GitHub
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Cho phép kích hoạt thủ công
+
+jobs:
+  keep_alive:
+    name: Ping Render Cloud Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send HTTP Ping to Render Health Endpoint
+        run: |
+          echo "=========================================================="
+          echo "Đang gửi tín hiệu giữ thức (Keep-Alive) tới Render.com..."
+          echo "Thời gian: $(date -u)"
+          echo "Endpoint: https://xiaozhi-tutor-mcp.onrender.com/health"
+          echo "=========================================================="
+          RESPONSE=$(curl -fsSL -A "GitHub-KeepAlive-Bot/1.0" https://xiaozhi-tutor-mcp.onrender.com/health)
+          echo "Phản hồi: $RESPONSE"
+          echo "Dịch vụ đã được giữ thức 24/7 thành công!"

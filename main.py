@@ -343,12 +343,32 @@ async def run_mcp_client():
 # FASTAPI APPLICATION (PHỤC VỤ RENDER.COM WEB SERVICE & HEALTH CHECK 24/7)
 # ==============================================================================
 
+async def keep_alive_self_ping():
+    """Tự động gửi tín hiệu Inbound HTTP tới chính dịch vụ mỗi 9 phút để Render không bao giờ sleep"""
+    await asyncio.sleep(60)  # Đợi 1 phút sau khi khởi động
+    health_url = "https://xiaozhi-tutor-mcp.onrender.com/health"
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    while True:
+        try:
+            req = urllib.request.Request(health_url, headers={'User-Agent': 'Render-Self-KeepAlive/1.0'})
+            with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:
+                print(f"[Keep-Alive] Ping {health_url} thành công! Status: {resp.getcode()}")
+        except Exception as e:
+            print(f"[Keep-Alive] Ping log: {e}")
+        await asyncio.sleep(540)  # Lặp lại mỗi 9 phút
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Khởi động tiến trình MCP client chạy ngầm vĩnh viễn trên Cloud
-    task = asyncio.create_task(run_mcp_client())
+    # Khởi động tiến trình MCP client và tiến trình Keep-Alive chạy ngầm vĩnh viễn trên Cloud
+    task_mcp = asyncio.create_task(run_mcp_client())
+    task_ping = asyncio.create_task(keep_alive_self_ping())
     yield
-    task.cancel()
+    task_mcp.cancel()
+    task_ping.cancel()
+
 
 app = FastAPI(
     title="Hệ Thống Gia Sư Giáo Dục Phổ Thông Việt Nam - Robot Xiaozhi ESP32",
