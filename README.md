@@ -54,7 +54,16 @@ Nhấn **Create Web Service**!
     "status": "online",
     "service": "Gia Sư Phổ Thông Việt Nam (Lớp 6-12) 24/7",
     "cloud_host": "Render.com",
-    "mcp_connected": true
+    "version": "4.1.0",
+    "mcp_connected": true,
+    "tools_count": 6
   }
   ```
+* Hệ thống trang bị 6 công cụ MCP:
+  1. `tra_cuu_ly_thuyet_sgk_thcs_thpt`: Tra cứu lý thuyết cốt lõi SGK mới.
+  2. `huong_dan_giai_bai_tap_sgk_sbt`: Giải bài tập SGK và SBT.
+  3. `on_thi_chuyen_de_va_de_kiem_tra`: Ngân hàng đề thi và ma trận chuẩn Bộ GD&ĐT.
+  4. `tu_van_phuong_phap_hoc_va_meo_thi`: Mẹo bấm máy tính Casio, sơ đồ tư duy.
+  5. `tim_kiem_bai_hat_va_am_nhac`: Tra cứu bài hát, tác giả, lời bài hát giải trí sau giờ học.
+  6. `phan_hoi_khi_khong_nghe_ro`: Chuẩn hóa phản hồi khi âm thanh rè hoặc chưa rõ câu hỏi ("Tôi chưa nghe rõ câu hỏi, làm ơn bạn hãy nhắc lại câu hỏi một cách rõ ràng rồi tôi sẽ trả lời bạn luôn").
 * Robot Xiaozhi ESP32 của bạn bây giờ có thể đặt ở bất cứ đâu (phòng khách, bàn học, phòng ngủ...) chỉ cần có Wi-Fi là luôn có một người Gia sư thông thái 24/7 mà bạn hoàn toàn có thể tắt máy tính cá nhân!
