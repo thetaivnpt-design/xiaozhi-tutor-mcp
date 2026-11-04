@@ -54,7 +54,10 @@ STATS = {
     "cache_hits": 0,
     "live_searches": 0,
     "mcp_connected": False,
-    "last_error": None
+    "last_error": None,
+    "last_ping_time": None,
+    "total_pings": 0,
+    "recent_queries": []
 }
 
 MEMORY_CACHE = {}
@@ -436,7 +439,7 @@ async def run_mcp_client():
                                 "result": {
                                     "protocolVersion": "2024-11-05",
                                     "capabilities": {"tools": {"listChanged": False}},
-                                    "serverInfo": {"name": "vietnam-smart-tutor-cloud", "version": "4.1.1"}
+                                    "serverInfo": {"name": "vietnam-smart-tutor-cloud", "version": "4.1.2"}
                                 }
                             }
                             await ws.send(json.dumps(resp))
@@ -450,6 +453,14 @@ async def run_mcp_client():
                             params = data.get("params", {})
                             name = params.get("name", "")
                             args = params.get("arguments", {})
+                            now_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                            STATS["recent_queries"].append({
+                                "time": now_str,
+                                "tool": name,
+                                "args": args
+                            })
+                            if len(STATS["recent_queries"]) > 10:
+                                STATS["recent_queries"].pop(0)
                             
                             output_text = await handle_tool_call(name, args)
                             resp = {
@@ -460,6 +471,8 @@ async def run_mcp_client():
                             await ws.send(json.dumps(resp))
 
                         elif method == "ping":
+                            STATS["last_ping_time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                            STATS["total_pings"] += 1
                             resp = {"jsonrpc": "2.0", "id": msg_id, "result": {}}
                             await ws.send(json.dumps(resp))
 
@@ -505,7 +518,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Hệ Thống Gia Sư Giáo Dục Phổ Thông Việt Nam - Robot Xiaozhi ESP32",
     description="Dịch vụ MCP Cloud 24/7 hỗ trợ học sinh THCS (Lớp 6-9) và THPT (Lớp 10-12) bám sát SGK Bộ GD&ĐT",
-    version="4.1.1",
+    version="4.1.2",
     lifespan=lifespan
 )
 
@@ -516,17 +529,20 @@ def home():
         "status": "online",
         "service": "Gia Sư Phổ Thông Việt Nam (Lớp 6-12) 24/7",
         "cloud_host": "Render.com",
-        "version": "4.1.1",
+        "version": "4.1.2",
         "mcp_connected": STATS["mcp_connected"],
         "uptime_hours": uptime_h,
         "total_queries_served": STATS["total_queries"],
+        "total_broker_pings": STATS["total_pings"],
+        "last_broker_ping": STATS["last_ping_time"],
+        "recent_queries_log": STATS["recent_queries"],
         "tools_count": len(TOOLS),
         "accredited_sources": ACCREDITED_DOMAINS
     }
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "mcp_connected": STATS["mcp_connected"], "version": "4.1.1"}
+    return {"status": "ok", "mcp_connected": STATS["mcp_connected"], "version": "4.1.2"}
 
 if __name__ == "__main__":
     import uvicorn
