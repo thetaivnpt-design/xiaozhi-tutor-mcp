@@ -54,7 +54,7 @@ Nhấn **Create Web Service**!
     "status": "online",
     "service": "Gia Sư Phổ Thông Việt Nam (Lớp 6-12) 24/7",
     "cloud_host": "Render.com",
-    "version": "4.1.0",
+    "version": "4.1.1",
     "mcp_connected": true,
     "tools_count": 6
   }

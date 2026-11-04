@@ -24,6 +24,7 @@ MCP_WS_URL = f"wss://api.xiaozhi.me/mcp/?token={MCP_TOKEN}"
 # ==============================================================================
 
 ACCREDITED_DOMAINS = [
+    "thuvienthayco.com",
     "vietjack.com",
     "loigiaihay.com",
     "thuvienhoclieu.com",
@@ -274,7 +275,7 @@ def execute_tutor_query(category: str, mon_hoc: str, lop: str, topic: str, extra
     header = (
         f"【NGUỒN HỌC LIỆU CHÍNH THỐNG: BỘ GIÁO DỤC VÀ ĐÀO TẠO VIỆT NAM】\n"
         f"• Khối Lớp: {lop if lop else '6 đến 12'} | Môn học: {mon_hoc if mon_hoc else 'Chung'}\n"
-        f"• Hệ thống cổng học liệu: vietjack.com, loigiaihay.com, thuvienhoclieu.com, hanhtrangso.nxbgd.vn, hoc247.net, vndoc.com, olm.vn, studocu.vn, mathvn.com.\n"
+        f"• Hệ thống cổng học liệu: thuvienthayco.com, vietjack.com, loigiaihay.com, thuvienhoclieu.com, hanhtrangso.nxbgd.vn, hoc247.net, vndoc.com, olm.vn, studocu.vn, mathvn.com, hoc10.vn, tuyensinh247.com.\n"
         f"• Chuẩn GDPT mới: Kết nối tri thức với cuộc sống, Cánh diều, Chân trời sáng tạo.\n"
         f"-------------------------------------------------------------------------\n"
     )
@@ -435,7 +436,7 @@ async def run_mcp_client():
                                 "result": {
                                     "protocolVersion": "2024-11-05",
                                     "capabilities": {"tools": {"listChanged": False}},
-                                    "serverInfo": {"name": "vietnam-smart-tutor-cloud", "version": "4.1.0"}
+                                    "serverInfo": {"name": "vietnam-smart-tutor-cloud", "version": "4.1.1"}
                                 }
                             }
                             await ws.send(json.dumps(resp))
@@ -504,7 +505,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Hệ Thống Gia Sư Giáo Dục Phổ Thông Việt Nam - Robot Xiaozhi ESP32",
     description="Dịch vụ MCP Cloud 24/7 hỗ trợ học sinh THCS (Lớp 6-9) và THPT (Lớp 10-12) bám sát SGK Bộ GD&ĐT",
-    version="4.1.0",
+    version="4.1.1",
     lifespan=lifespan
 )
 
@@ -515,7 +516,7 @@ def home():
         "status": "online",
         "service": "Gia Sư Phổ Thông Việt Nam (Lớp 6-12) 24/7",
         "cloud_host": "Render.com",
-        "version": "4.1.0",
+        "version": "4.1.1",
         "mcp_connected": STATS["mcp_connected"],
         "uptime_hours": uptime_h,
         "total_queries_served": STATS["total_queries"],
@@ -525,7 +526,7 @@ def home():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "mcp_connected": STATS["mcp_connected"], "version": "4.1.0"}
+    return {"status": "ok", "mcp_connected": STATS["mcp_connected"], "version": "4.1.1"}
 
 if __name__ == "__main__":
     import uvicorn
